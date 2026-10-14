@@ -167,7 +167,7 @@ def find_all_roots(coefficients):
 
     return roots
 
-a = [-1, -1, 0, 1]
-
-newton(a, 3)
-print(find_all_roots(a))
+if __name__ == "__main__":
+    a = [-1, -1, 0, 1]
+    newton(a, 3)
+    print(find_all_roots(a))
