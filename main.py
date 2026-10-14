@@ -123,12 +123,19 @@ def solve_linear(coefficients):
     return [-a0 / a1]
 
 def solve_quadratic(coefficients):
-    # coefficients = [a0, a1, a2] for a0 + a1*x + a2*x^2 = 0. Quadratic
-    # formula with cmath.sqrt so a negative discriminant yields the
-    # complex conjugate pair directly instead of erroring.
+    # coefficients = [a0, a1, a2] for a0 + a1*x + a2*x^2 = 0.
     a0, a1, a2 = coefficients
-    disc = cmath.sqrt(a1**2 - 4 * a2 * a0)
-    return [(-a1 + disc) / (2 * a2), (-a1 - disc) / (2 * a2)]
+    disc = a1**2 - 4 * a2 * a0
+    # cmath.sqrt always returns a complex, even for a non-negative input
+    # (e.g. sqrt(4) -> (2+0j)), which is why real roots were printing as
+    # things like (3-0j). Only reach for cmath when the root is actually
+    # going to be complex: disc is already complex-typed (coefficients
+    # went complex from an earlier deflation step) or disc < 0.
+    if isinstance(disc, complex) or disc < 0:
+        sqrt_disc = cmath.sqrt(disc)
+    else:
+        sqrt_disc = math.sqrt(disc)
+    return [(-a1 + sqrt_disc) / (2 * a2), (-a1 - sqrt_disc) / (2 * a2)]
 
 def find_all_roots(coefficients):
     '''The deflation driver: repeatedly finds one root and deflates until
