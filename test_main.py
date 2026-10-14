@@ -1,20 +1,9 @@
 from main import find_all_roots, horner
 
-# Each entry is (coefficients, all_real). coefficients are ascending by
-# power (matches main.py's convention). all_real marks polynomials whose
-# roots are all real, so the test can also check that solve_quadratic
-# returns plain floats for them instead of complex values like (3-0j).
-# The cases exercise every path through find_all_roots:
-#   - a plain quadratic: hits the degree==2 base case directly, no
-#     Newton/Muller/deflation loop at all.
-#   - three real roots: exercises Newton + deflation twice in a row.
-#   - two complex conjugate pairs: Newton can't start here (p'(0)=0 on
-#     x^2+1), so this exercises the Muller fallback.
-#   - three real roots + one complex pair: the general degree-5 case,
-#     mixing both root-finding paths and multiple deflation steps.
-#   - a cubic with 3 real roots whose last deflation step lands on a
-#     positive discriminant: catches cmath.sqrt producing (3-0j) instead
-#     of a plain float.
+# Each entry is (coefficients, all_real): coefficients ascending by power,
+# all_real True if every root should come back as a plain float (not complex).
+# The polynomials cover real-only, complex-only, and mixed root cases.
+
 TEST_CASES = [
     ([6, -5, 1], True),                 # (x-2)(x-3):              roots 2, 3
     ([-6, 11, -6, 1], True),            # (x-1)(x-2)(x-3):         roots 1, 2, 3
