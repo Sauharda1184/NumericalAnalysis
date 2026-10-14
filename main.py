@@ -2,12 +2,15 @@
 import math
 import cmath
 
-def g(coefficients, x): 
+def g(coefficients, x):
+    # One Newton-Raphson step: x - p(x)/p'(x).
     value, derivative = horner(coefficients, x)
 
-    return x - value / derivative 
+    return x - value / derivative
 
 def newton(coefficients, p_0):
+    # Newton's method: repeatedly apply g() from the real guess p_0 until
+    # consecutive iterates are within TOL, or give up after 100 tries.
     TOL = 1e-6
     i = 1 
 
@@ -85,13 +88,15 @@ def muller(coefficients, p0, p1, p2):
     print("Muller's method failed. Did not reach TOL in 100 iterations.")
 
 def horner(coefficients, x):
+    # Horner's method: evaluates p(x) and p'(x) together in one pass of
+    # nested multiplication. y ends up as p(x); z ends up as p'(x).
     n = len(coefficients)-1
     y = coefficients[n]
     z = coefficients[n]
-    for j in range (n-1, 0 ,-1): 
-        y = x * y + coefficients[j] 
-        z = x * z + y 
-    y = x * y + coefficients[0] 
+    for j in range (n-1, 0 ,-1):
+        y = x * y + coefficients[j]
+        z = x * z + y
+    y = x * y + coefficients[0]
     return y, z
 
 def synth_div(coefficients, r):
